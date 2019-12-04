@@ -1,0 +1,62 @@
+图形验证码实现思路：
+1.存放盒子（载体）
+	<canvas id="xxx"></canvas>
+	<span id="xxx"></span>
+canvas元素用于在网页上绘制图形，用javascript在网页上绘制图像
+元素和方法由webAPI提供
+同样使用<canvas>元素的 WebGL API 则用于绘制
+硬件加速的2D和3D图形。
+2.盒子的CSS样式设置
+	选到对应Class下面的元素就行了
+3.二维码生成——定义一个creatCode函数
+首先定义code为空
+然后设置数组长度，设置数组名，把想要放进的元素全放在里面
+写一个循环函数，每次循环的过程中产生一个随机的整数
+ var charIndex = Math.floor(Math.random() * 36);
+            // Math.random()会产生一个[0,1)的数
+            // Math.random()*36会产生一个[0,36)的数，注意其中包含了小数
+            // Math.floor(x) 方法返回小于等于x的最大整数。
+            // Math.floor(Math.random()*36)会对由上面的语句产生的数值进行向下取整
+            // 例如产生的数为5.5，则math.floor(5.5)=5
+            // 最后把这个数赋值给变量i
+<!--至于为什么是36，因为数值的max为9，如果是四个字符段的话就是*4，需要更多
+的话就是9*codelength-->
+然后把随机生成的数值加在code里面
+因为js加法是a+b=ab，所以遍历4次之后就生成了4字符长度的二维码
+最后console.log("生成验证码 " + code);
+        return code;
+4.绘制二维码：
+function draw_canvas(code) {
+        if (canvas) {
+            var ctx=canvas.getContext('2d');
+            <!--返回一个canvascantext2d对象-->
+            ctx.clearRect(0,0,canvas.width,canvas.height);
+            <!--清空整个画布-->
+            ctx.font="80px Verdana";
+            <!--font是字体大小-->
+            ctx.strokeText(code,25,110);
+            <!--相对于画布xy的坐标-->
+            <!--绘制描边文本-->
+            console.log("canvas 绘制完成")
+        }
+        else
+            console.log("没有找到canvas")
+    }
+5.设置二维码加载方式
+canvas.onclick = function () {
+        code = createCode();
+        draw_canvas(code);
+<!--当点击按钮时更新二维码-->
+    }
+    window.onload = function () {
+        code = createCode();
+        draw_canvas(code);
+    }
+<!--当页面重新加载时更新二维码-->
+*6这个设计体系我觉得缺陷
+一般来说二维码是用来测试你是否与电脑正在通讯的，
+正确的方式应该是一个二维码窗口 一个获取二维码按钮
+当进行验证的时候onclick另一个二维码按钮然后进行表单验证
+并且设置一个timer当timer超过一定时间的时候跳出弹窗
+警告验证失败
+请求第二次验证
