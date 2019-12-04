@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>图形验证码</title>
+    <style>
+        #demo{
+            background-color: #a18cd1;
+            width: 90px;
+            height: 50px;
+            border-radius: 20px;
+            border:2px solid #893b8a;
+            line-height: 40px;
+        }
+        <!--这行代码是表示矩阵圆角的程度-->
+    </style>
+</head>
+<body>
+    <canvas id="demo"></canvas>
+</body>
+</html>
+<script language="javascript" type="text/javascript">
+    var canvas = document.getElementById('demo');
+    function createCode() {
+        let code = "";
+        var codeLength = 4;
+        <!--设定二维码的长度为4-->
+        var selectChar = new Array(0,1,2,3,4,5,6,7,8,9,'A','B','C','D','E','F','G','H',
+            'I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z');
+        <!--把所有需要的元素遍历进入一个数组中间-->
+        for (var i = 0; i < codeLength; i++) {
+            var charIndex = Math.floor(Math.random() * 36);
+            // Math.random()会产生一个[0,1)的数
+            // Math.random()*36会产生一个[0,36)的数，注意其中包含了小数
+            // Math.floor(x) 方法返回小于等于x的最大整数。
+            // Math.floor(Math.random()*36)会对由上面的语句产生的数值进行向下取整
+            // 例如产生的数为5.5，则math.floor(5.5)=5
+            // 最后把这个数赋值给变量i
+            code += selectChar[charIndex];
+            <!--selectChar定义的new array-->
+            <!--因为js的加法不是1+2=3 是1+2=12-->
+            <!--如果计算的话是eval-->
+        }
+        console.log("生成验证码 " + code);
+        return code;
+    }
+    function draw_canvas(code) {
+        if (canvas) {
+            var ctx=canvas.getContext('2d');
+            <!--返回一个canvascantext2d对象-->
+            ctx.clearRect(0,0,canvas.width,canvas.height);
+            <!--清空整个画布-->
+            ctx.font="80px Verdana";
+            <!--font是字体大小-->
+            ctx.strokeText(code,25,110);
+            <!--相对于画布xy的坐标-->
+        <!--绘制描边文本
+            console.log("canvas 绘制完成");
+        }
+        else
+            console.log("没有找到canvas");
+    }
+    canvas.onclick = function () {
+        code = createCode();
+        draw_canvas(code);
+    }
+    window.onload = function () {
+        code = createCode();
+        draw_canvas(code);
+    }
+</script>
